@@ -72,9 +72,14 @@ body {
   line-height: 0;
 }
 
+.orchard-band {
+  margin-top: clamp(0.5rem, 2.5vw, 3rem);
+}
+
+/* 26.87vw matches the artwork's 2400:645 aspect ratio, so tree tops are never cropped up to ~2200px wide. */
 .orchard-band img {
   width: 100%;
-  height: clamp(210px, 25vw, 360px);
+  height: clamp(210px, 26.87vw, 600px);
   object-fit: cover;
   object-position: 50% 100%;
 }
@@ -84,8 +89,9 @@ body {
   padding: 2.5rem 0 0;
 }
 
+/* 15.65vw matches the footer artwork's 2000:313 aspect ratio. */
 .orchard-footer .footer-band img {
-  height: clamp(120px, 15vw, 210px);
+  height: clamp(120px, 15.65vw, 420px);
 }
 
 .fruit-icon {
