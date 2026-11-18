@@ -46,9 +46,6 @@ and rerun `python3 make_orchard.py` to regenerate.
 
 | Where (in `index.html`) | Placeholder | Replace with |
 |---|---|---|
-| Hero subtitle | `<Full Title — to be released>` | full paper title |
-| Hero authors line | `<Authors — to be released>` | author list |
-| Hero affiliations line | `<Affiliations — to be released>` | affiliations |
 | Hero button **Paper** | `href=""`, class `is-coming-soon`, "Coming soon" | paper URL |
 | Hero button **Code** | `href=""`, class `is-coming-soon`, "Coming soon" | code URL |
 | Hero button **Dataset** | `href=""`, class `is-coming-soon`, "Coming soon" | dataset URL |
