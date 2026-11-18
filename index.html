@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AVPick: frame-level, multi-label detection of speech, vocals, instruments, and sound in audio-visual clips.">
+  <title>AVPick</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="static/css/fonts.css">
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css?v=4">
+  <script defer src="static/js/index.js?v=3"></script>
+  <script defer src="static/js/demo.js?v=5"></script>
+</head>
+<body>
+
+<!-- ================= Title ================= -->
+<section class="hero orchard-hero">
+  <img class="sky-deco sky-sun" src="static/images/orchard_sun.webp?v=3" alt="" aria-hidden="true" width="320" height="320">
+  <img class="sky-deco sky-cloud-a" src="static/images/orchard_cloud_a.webp?v=3" alt="" aria-hidden="true" width="440" height="220">
+  <img class="sky-deco sky-cloud-b" src="static/images/orchard_cloud_b.webp?v=3" alt="" aria-hidden="true" width="360" height="180">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">AVPick</h1>
+          <p class="publication-subtitle placeholder">&lt;Full Title — to be released&gt;</p>
+
+          <div class="publication-authors placeholder">&lt;Authors — to be released&gt;</div>
+          <div class="publication-affiliations placeholder">&lt;Affiliations — to be released&gt;</div>
+
+          <div class="publication-links">
+            <span class="link-block">
+              <a href="" class="button is-normal is-rounded is-coming-soon" aria-disabled="true" tabindex="-1">
+                <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg></span>
+                <span>Paper</span><span class="soon">Coming soon</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="" class="button is-normal is-rounded is-coming-soon" aria-disabled="true" tabindex="-1">
+                <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg></span>
+                <span>Code</span><span class="soon">Coming soon</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="" class="button is-normal is-rounded is-coming-soon" aria-disabled="true" tabindex="-1">
+                <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13"/><path d="M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/></svg></span>
+                <span>Dataset</span><span class="soon">Coming soon</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="" class="button is-normal is-rounded is-coming-soon" aria-disabled="true" tabindex="-1">
+                <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M10 7H5v5h3.5c0 2.5-1.3 4-3.5 4.5M19 7h-5v5h3.5c0 2.5-1.3 4-3.5 4.5"/></svg></span>
+                <span>BibTeX</span><span class="soon">Coming soon</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="orchard-band" aria-hidden="true">
+    <img src="static/images/orchard_hero.webp?v=7" alt="" width="2400" height="645">
+  </div>
+</section>
+
+<!-- ================= Demo ================= -->
+<section class="section demo-top" id="demo">
+  <div class="container is-max-desktop">
+    <div class="demo-player" data-video="demo-video" data-predictions="static/videos/demo_clip_predictions.json">
+      <video id="demo-video" controls playsinline preload="none" poster="static/images/demo_clip_poster.jpg" width="1280" height="720">
+        <source src="static/videos/demo_clip.mp4" type="video/mp4">
+      </video>
+
+      <div class="demo-active" aria-live="polite">
+        <span class="label">Active now:</span>
+        <span class="demo-chip chip-speech" data-class="speech">speech</span>
+        <span class="demo-chip chip-vocals" data-class="vocals">vocals</span>
+        <span class="demo-chip chip-instruments" data-class="instruments">instruments</span>
+        <span class="demo-chip chip-sound" data-class="sound">sound</span>
+      </div>
+
+      <div class="demo-timeline">
+        <div class="timeline-labels">
+          <div class="lane-label cls-speech">speech</div>
+          <div class="lane-label cls-vocals">vocals</div>
+          <div class="lane-label cls-instruments">instruments</div>
+          <div class="lane-label cls-sound">sound</div>
+        </div>
+        <div class="timeline-tracks-col" title="Click or drag to seek">
+          <div class="lane-track" data-class="speech"></div>
+          <div class="lane-track" data-class="vocals"></div>
+          <div class="lane-track" data-class="instruments"></div>
+          <div class="lane-track" data-class="sound"></div>
+          <div class="axis-track"></div>
+          <div class="demo-playhead"></div>
+        </div>
+      </div>
+      <div class="demo-frames">
+        <div class="frames-head">
+          <span class="label">Frame-level view</span>
+          <span class="frames-note">outlined cell = current frame</span>
+        </div>
+        <div class="frames-body">
+          <div class="frames-labels">
+            <div class="frames-label cls-speech">speech</div>
+            <div class="frames-label cls-vocals">vocals</div>
+            <div class="frames-label cls-instruments">instruments</div>
+            <div class="frames-label cls-sound">sound</div>
+          </div>
+          <div class="frames-canvas-wrap"><canvas class="frames-canvas" aria-hidden="true"></canvas></div>
+        </div>
+      </div>
+      <p class="demo-status"></p>
+      <p class="figure-caption demo-caption">
+        AVPick predictions on an audio-visual clip: frame-level, multi-label detection of the four classes, so
+        several classes can be active in the same frame. Play the video, or click / drag on the lanes to seek.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Overview ================= -->
+<section class="section" id="overview">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Overview</h2>
+        <div class="class-legend" aria-label="Class colors">
+          <span><img class="fruit-icon" src="static/images/fruit_speech.png?v=7" alt="" width="60" height="70"><span class="cls cls-speech">speech</span></span>
+          <span><img class="fruit-icon" src="static/images/fruit_vocals.png?v=7" alt="" width="60" height="70"><span class="cls cls-vocals">vocals</span></span>
+          <span><img class="fruit-icon" src="static/images/fruit_instruments.png?v=7" alt="" width="60" height="70"><span class="cls cls-instruments">instruments</span></span>
+          <span><img class="fruit-icon" src="static/images/fruit_sound.png?v=7" alt="" width="60" height="70"><span class="cls cls-sound">sound</span></span>
+        </div>
+        <div class="content has-text-justified">
+          <p>
+            Selecting training data for speech and music generation means knowing, frame by frame, which of four
+            sound classes are present in a clip: <span class="cls cls-speech">speech</span>,
+            <span class="cls cls-vocals">vocals</span>, <span class="cls cls-instruments">instruments</span>, and
+            environmental <span class="cls cls-sound">sound</span>.
+            The video track can help with this, but it is not obvious which of these classes actually gain from it.
+            We compare an audio-only pathway with a fused audio-visual pathway on the same frozen audio-visual backbone
+            (PE-AV), and find that vision helps speech, vocals, and instruments, while the audio-only pathway is better
+            for sound overall; sound sources are also off-screen far more often than those of the other classes.
+            AVPick builds this into one model: two lightweight heads on the shared frozen backbone, one reading fused
+            audio-visual features for speech, vocals, and instruments and one reading audio-only features for sound,
+            with each class's pathway fixed before training.
+            It predicts all four classes on every frame, so co-occurring classes are detected together.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Key findings ================= -->
+<section class="section pt-0" id="findings">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Key Findings</h2>
+    <div class="columns is-multiline">
+      <div class="column is-half">
+        <div class="finding-card">
+          <div class="finding-num">Finding 1</div>
+          <h3>Vision helps three classes, but not sound</h3>
+          <p>
+            In controlled per-class input swaps on SV-Internal, letting a class's dedicated head read fused
+            audio-visual instead of audio-only features raises F1 for
+            <span class="cls cls-speech">speech</span> (+0.67 / +1.24 points),
+            <span class="cls cls-vocals">vocals</span> (+1.65 / +1.36) and
+            <span class="cls cls-instruments">instruments</span> (+0.42 / +0.40), but lowers it for
+            <span class="cls cls-sound">sound</span> (&minus;2.06 / &minus;2.12), in both settings tested.
+          </p>
+          <p class="finding-source">Per-class visual contribution, settings A / B.</p>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="finding-card">
+          <div class="finding-num">Finding 2</div>
+          <h3>Sound sources are often off-screen, and vision then adds false positives</h3>
+          <p>
+            Among human-annotated AudioSet-Strict clips containing <span class="cls cls-sound">sound</span>,
+            44.7% have an off-screen source, versus 5.7&ndash;18.6% for the other three classes.
+            On off-screen clips, a variant whose sound head reads fused features (AV<sub>2</sub>) keeps 97.7% recall
+            but only 27.4% precision, compared with 42.9% precision for AVPick.
+          </p>
+          <p class="finding-source">Off-screen rates and on/off-screen sound F1.</p>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="finding-card">
+          <div class="finding-num">Finding 3</div>
+          <h3>Head separation and per-class modality choice both matter</h3>
+          <p>
+            On SV-Internal, a single audio-visual head reaches 0.884 macro F1. Giving sound its own head, with both
+            heads still audio-visual (AV<sub>2</sub>), raises it to 0.902; switching only that head to audio-only
+            features at matched capacity (AVPick) raises it to 0.910. Sound F1 rises from 0.799 to 0.820 and then to 0.840.
+          </p>
+          <p class="finding-source">Ablation of input routing and head separation (mean over seeds).</p>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="finding-card">
+          <div class="finding-num">Finding 4</div>
+          <h3>Best on all three test sets, and robust to the threshold</h3>
+          <p>
+            AVPick has the highest macro F1 (0.910 / 0.849 / 0.900) and the lowest DER (13.57 / 22.83 / 14.03%) on
+            SV-Internal, AudioSet-Mapped and AudioSet-FrameGold. On SV-Internal, the threshold range over which each
+            class's F1 stays within 0.01 of its best value averages 0.41 in width, versus 0.09&ndash;0.21 for four
+            audio-only detectors.
+          </p>
+          <p class="finding-source">Main results and threshold-robustness analysis.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Method ================= -->
+<section class="section" id="method">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Method</h2>
+    <figure class="figure-block">
+      <a href="static/images/architecture.png" title="Open full-size image">
+        <img src="static/images/architecture.png" width="2476" height="718"
+             alt="Architecture: an audio-visual clip passes through the frozen PE-AV encoder; fused features feed an AV head (4 Conformer blocks, 3 classes) and audio-only features feed an audio head (2 Conformer blocks, 1 class), producing per-frame detections.">
+      </a>
+    </figure>
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <div class="content has-text-justified">
+          <p>
+            A clip passes once through the frozen PE-AV backbone, which returns two per-frame feature sequences on a
+            shared frame grid: audio-only features <i>h</i><sub>a</sub> from its audio sub-module, which never see the
+            video, and fused audio-visual features <i>h</i><sub>av</sub>. The clip-level <code>[CLS]</code> token is
+            dropped. An audio-visual head (4 Conformer blocks) scores
+            <span class="cls cls-speech">speech</span>, <span class="cls cls-vocals">vocals</span>, and
+            <span class="cls cls-instruments">instruments</span> from <i>h</i><sub>av</sub>, and an audio head
+            (2 Conformer blocks) scores <span class="cls cls-sound">sound</span> from <i>h</i><sub>a</sub>.
+            Which head scores each class is fixed before training by the sign of its measured visual contribution,
+          </p>
+          <p class="equation">
+            &Delta;<sub>V</sub>(<i>c</i>) = F1<sub>+V</sub>(<i>c</i>) &minus; F1<sub>&minus;V</sub>(<i>c</i>),
+          </p>
+          <p>
+            the frame-level F1 difference between reading <i>h</i><sub>av</sub> and <i>h</i><sub>a</sub> on a held-out
+            development split; classes with &Delta;<sub>V</sub>(<i>c</i>) &le; 0 use the audio-only pathway.
+            Only the two heads are trained, with binary cross-entropy averaged over frames and classes. Because every
+            class is scored by exactly one head, the heads never compete for a shared output, and no routing decision
+            is made at inference. Together the heads have 1.3% as many parameters as the frozen backbone.
+          </p>
+        </div>
+      </div>
+    </div>
+    <figure class="figure-block narrow-figure mt-5">
+      <img src="static/images/taxonomy.png" width="1349" height="760"
+           alt="Four-class taxonomy: speech (human voice, non-musical), vocals (human voice, musical), sound (no human voice, non-musical), and instruments (no human voice, musical), each with representative AudioSet labels.">
+    </figure>
+    <p class="figure-caption">
+      <b>Four-class taxonomy.</b> Classes are grouped by human vocalization and musicality; each quadrant lists
+      representative AudioSet labels mapped to that class.
+    </p>
+  </div>
+</section>
+
+<!-- ================= Results ================= -->
+<section class="section" id="results">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Results</h2>
+
+    <h3 class="subsection-title">Main results on three test sets</h3>
+    <div class="tabs is-centered is-toggle results-tabs" data-tabs="main">
+      <ul role="tablist">
+        <li class="is-active" data-target="panel-sv"><a href="#panel-sv" role="tab" aria-selected="true"><span>SV-Internal</span></a></li>
+        <li data-target="panel-asm"><a href="#panel-asm" role="tab" aria-selected="false"><span>AudioSet-Mapped<sup>&dagger;</sup></span></a></li>
+        <li data-target="panel-fg"><a href="#panel-fg" role="tab" aria-selected="false"><span>AudioSet-FrameGold</span></a></li>
+      </ul>
+    </div>
+
+    <div id="panel-sv" class="results-table-wrap" data-tab-panel="main" role="tabpanel">
+      <p class="table-note mt-0 mb-2 has-text-centered">Proprietary test set with human frame-level annotations (155 clips, 2.0 h).</p>
+      <table class="results">
+          <thead>
+            <tr class="supheader">
+              <th rowspan="2">Model</th>
+              <th rowspan="2">Mod.</th>
+              <th colspan="5">F1 (&uarr;)</th>
+              <th rowspan="2">DER<br>(&darr;, %)</th>
+            </tr>
+            <tr>
+              <th>Macro</th>
+              <th class="cls-speech">Sp.</th>
+              <th class="cls-vocals">Voc.</th>
+              <th class="cls-instruments">Ins.</th>
+              <th class="cls-sound">Snd.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="group-row"><td colspan="8">Multimodal LLMs</td></tr>
+            <tr><th scope="row">Gemini 3.1 Pro</th><td><span class="mod mod-av">A+V</span></td><td>0.759</td><td>0.769</td><td>0.776</td><td>0.892</td><td>0.600</td><td>37.01</td></tr>
+            <tr><th scope="row">Gemini 3.5 Flash</th><td><span class="mod mod-av">A+V</span></td><td>0.367</td><td>0.320</td><td>0.205</td><td>0.572</td><td>0.370</td><td>67.40</td></tr>
+            <tr><th scope="row">Qwen3-Omni-30B</th><td><span class="mod mod-av">A+V</span></td><td>0.448</td><td>0.654</td><td>0.554</td><td>0.266</td><td>0.320</td><td>61.55</td></tr>
+            <tr><th scope="row">Qwen3.5-Omni-plus</th><td><span class="mod mod-av">A+V</span></td><td>0.769</td><td>0.752</td><td>0.781</td><td>0.894</td><td>0.651</td><td>32.20</td></tr>
+            <tr><th scope="row">Seed-lite</th><td><span class="mod mod-av">A+V</span></td><td>0.362</td><td>0.607</td><td>0.178</td><td>0.056</td><td>0.609</td><td>41.87</td></tr>
+            <tr class="group-row"><td colspan="8">Audio-only detectors</td></tr>
+            <tr><th scope="row">FireRedVAD<sup>&Dagger;</sup></th><td><span class="mod mod-a">A</span></td><td>0.656</td><td>0.876</td><td>0.806</td><td>0.944</td><td>0.000</td><td>30.74</td></tr>
+            <tr><th scope="row">BEATs</th><td><span class="mod mod-a">A</span></td><td>0.859</td><td>0.907</td><td>0.811</td><td>0.944</td><td>0.776</td><td>18.31</td></tr>
+            <tr><th scope="row">Dasheng</th><td><span class="mod mod-a">A</span></td><td>0.844</td><td>0.908</td><td>0.813</td><td>0.920</td><td>0.736</td><td>19.91</td></tr>
+            <tr><th scope="row">PE-A</th><td><span class="mod mod-a">A</span></td><td>0.888</td><td>0.915</td><td>0.853</td><td>0.983</td><td>0.800</td><td>17.10</td></tr>
+            <tr><th scope="row">BEATs<sub>strong</sub></th><td><span class="mod mod-a">A</span></td><td>0.881</td><td>0.921</td><td>0.901</td><td>0.971</td><td>0.729</td><td>20.99</td></tr>
+            <tr><th scope="row">ATST-F<sub>strong</sub></th><td><span class="mod mod-a">A</span></td><td>0.885</td><td>0.923</td><td><b>0.904</b></td><td>0.976</td><td>0.736</td><td>20.21</td></tr>
+            <tr class="ours-row"><th scope="row">AVPick (ours)</th><td><span class="mod mod-av">A+V</span></td><td><b>0.910</b></td><td><b>0.924</b></td><td>0.892</td><td><b>0.984</b></td><td><b>0.840</b></td><td><b>13.57</b></td></tr>
+          </tbody>
+        </table>
+    </div>
+    <div id="panel-asm" class="results-table-wrap is-hidden" data-tab-panel="main" role="tabpanel">
+      <p class="table-note mt-0 mb-2 has-text-centered">Official AudioSet evaluation set, temporally-strong labels mapped to the four classes (16,385 clips, 45.0 h).</p>
+      <table class="results">
+          <thead>
+            <tr class="supheader">
+              <th rowspan="2">Model</th>
+              <th rowspan="2">Mod.</th>
+              <th colspan="5">F1 (&uarr;)</th>
+              <th rowspan="2">DER<br>(&darr;, %)</th>
+            </tr>
+            <tr>
+              <th>Macro</th>
+              <th class="cls-speech">Sp.</th>
+              <th class="cls-vocals">Voc.</th>
+              <th class="cls-instruments">Ins.</th>
+              <th class="cls-sound">Snd.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="group-row"><td colspan="8">Multimodal LLMs</td></tr>
+            <tr><th scope="row">Gemini 3.1 Pro</th><td><span class="mod mod-av">A+V</span></td><td>0.717</td><td>0.636</td><td>0.596</td><td>0.840</td><td>0.796</td><td>34.51</td></tr>
+            <tr><th scope="row">Gemini 3.5 Flash</th><td><span class="mod mod-av">A+V</span></td><td>0.313</td><td>0.181</td><td>0.089</td><td>0.361</td><td>0.623</td><td>53.44</td></tr>
+            <tr><th scope="row">Qwen3-Omni-30B</th><td><span class="mod mod-av">A+V</span></td><td>0.574</td><td>0.474</td><td>0.486</td><td>0.631</td><td>0.705</td><td>40.44</td></tr>
+            <tr><th scope="row">Qwen3.5-Omni-plus</th><td><span class="mod mod-av">A+V</span></td><td>0.707</td><td>0.642</td><td>0.590</td><td>0.856</td><td>0.742</td><td>32.69</td></tr>
+            <tr><th scope="row">Seed-lite</th><td><span class="mod mod-av">A+V</span></td><td>0.465</td><td>0.342</td><td>0.369</td><td>0.411</td><td>0.737</td><td>45.49</td></tr>
+            <tr class="group-row"><td colspan="8">Audio-only detectors</td></tr>
+            <tr><th scope="row">FireRedVAD<sup>&Dagger;</sup></th><td><span class="mod mod-a">A</span></td><td>0.507</td><td>0.640</td><td>0.557</td><td>0.830</td><td>0.000</td><td>51.32</td></tr>
+            <tr><th scope="row">BEATs</th><td><span class="mod mod-a">A</span></td><td>0.802</td><td>0.780</td><td>0.702</td><td>0.861</td><td>0.864</td><td>27.78</td></tr>
+            <tr><th scope="row">Dasheng</th><td><span class="mod mod-a">A</span></td><td>0.771</td><td>0.772</td><td>0.686</td><td>0.787</td><td>0.840</td><td>30.26</td></tr>
+            <tr><th scope="row">PE-A</th><td><span class="mod mod-a">A</span></td><td>0.837</td><td><b>0.840</b></td><td>0.688</td><td>0.926</td><td>0.894</td><td>25.18</td></tr>
+            <tr><th scope="row">BEATs<sub>strong</sub></th><td><span class="mod mod-a">A</span></td><td>0.844</td><td>0.828</td><td><b>0.734</b></td><td>0.932</td><td>0.880</td><td>28.50</td></tr>
+            <tr><th scope="row">ATST-F<sub>strong</sub></th><td><span class="mod mod-a">A</span></td><td>0.845</td><td>0.828</td><td>0.728</td><td><b>0.935</b></td><td>0.887</td><td>27.21</td></tr>
+            <tr class="ours-row"><th scope="row">AVPick (ours)</th><td><span class="mod mod-av">A+V</span></td><td><b>0.849</b></td><td>0.838</td><td>0.724</td><td>0.934</td><td><b>0.900</b></td><td><b>22.83</b></td></tr>
+          </tbody>
+        </table>
+    </div>
+    <div id="panel-fg" class="results-table-wrap is-hidden" data-tab-panel="main" role="tabpanel">
+      <p class="table-note mt-0 mb-2 has-text-centered">Our human-annotated release (1,345 clips, 3.7 h).</p>
+      <table class="results">
+          <thead>
+            <tr class="supheader">
+              <th rowspan="2">Model</th>
+              <th rowspan="2">Mod.</th>
+              <th colspan="5">F1 (&uarr;)</th>
+              <th rowspan="2">DER<br>(&darr;, %)</th>
+            </tr>
+            <tr>
+              <th>Macro</th>
+              <th class="cls-speech">Sp.</th>
+              <th class="cls-vocals">Voc.</th>
+              <th class="cls-instruments">Ins.</th>
+              <th class="cls-sound">Snd.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="group-row"><td colspan="8">Multimodal LLMs</td></tr>
+            <tr><th scope="row">Gemini 3.1 Pro</th><td><span class="mod mod-av">A+V</span></td><td>0.738</td><td>0.742</td><td>0.752</td><td>0.872</td><td>0.588</td><td>32.97</td></tr>
+            <tr><th scope="row">Gemini 3.5 Flash</th><td><span class="mod mod-av">A+V</span></td><td>0.346</td><td>0.217</td><td>0.197</td><td>0.480</td><td>0.492</td><td>46.07</td></tr>
+            <tr><th scope="row">Qwen3-Omni-30B</th><td><span class="mod mod-av">A+V</span></td><td>0.562</td><td>0.537</td><td>0.637</td><td>0.638</td><td>0.435</td><td>51.11</td></tr>
+            <tr><th scope="row">Qwen3.5-Omni-plus</th><td><span class="mod mod-av">A+V</span></td><td>0.720</td><td>0.760</td><td>0.773</td><td>0.887</td><td>0.462</td><td>32.19</td></tr>
+            <tr><th scope="row">Seed-lite</th><td><span class="mod mod-av">A+V</span></td><td>0.467</td><td>0.419</td><td>0.510</td><td>0.395</td><td>0.546</td><td>49.21</td></tr>
+            <tr class="group-row"><td colspan="8">Audio-only detectors</td></tr>
+            <tr><th scope="row">FireRedVAD<sup>&Dagger;</sup></th><td><span class="mod mod-a">A</span></td><td>0.625</td><td>0.785</td><td>0.765</td><td>0.948</td><td>0.000</td><td>30.37</td></tr>
+            <tr><th scope="row">BEATs</th><td><span class="mod mod-a">A</span></td><td>0.860</td><td>0.877</td><td>0.840</td><td>0.945</td><td>0.779</td><td>18.49</td></tr>
+            <tr><th scope="row">Dasheng</th><td><span class="mod mod-a">A</span></td><td>0.829</td><td>0.870</td><td>0.809</td><td>0.931</td><td>0.707</td><td>20.85</td></tr>
+            <tr><th scope="row">PE-A</th><td><span class="mod mod-a">A</span></td><td>0.875</td><td>0.904</td><td>0.839</td><td>0.961</td><td>0.797</td><td>19.16</td></tr>
+            <tr><th scope="row">BEATs<sub>strong</sub></th><td><span class="mod mod-a">A</span></td><td>0.866</td><td>0.895</td><td>0.864</td><td>0.966</td><td>0.740</td><td>22.17</td></tr>
+            <tr><th scope="row">ATST-F<sub>strong</sub></th><td><span class="mod mod-a">A</span></td><td>0.866</td><td>0.895</td><td>0.857</td><td>0.963</td><td>0.749</td><td>21.40</td></tr>
+            <tr class="ours-row"><th scope="row">AVPick (ours)</th><td><span class="mod mod-av">A+V</span></td><td><b>0.900</b></td><td><b>0.911</b></td><td><b>0.877</b></td><td><b>0.968</b></td><td><b>0.844</b></td><td><b>14.03</b></td></tr>
+          </tbody>
+        </table>
+    </div>
+
+    <p class="table-note">
+      Frame-level F1 (&uarr;), macro-averaged and per class: <span class="cls cls-speech">Sp.</span> speech,
+      <span class="cls cls-vocals">Voc.</span> vocals, <span class="cls cls-instruments">Ins.</span> instruments,
+      <span class="cls cls-sound">Snd.</span> sound; DER (&darr;, %). The best value in each column is in bold.
+      Mod.: <span class="mod mod-a">A</span> audio, <span class="mod mod-av">A+V</span> audio-visual.
+      Multimodal LLMs return time intervals that are converted to the frame grid; the other systems predict
+      frame-level labels directly. BEATs<sub>strong</sub> and ATST-F<sub>strong</sub> are AudioSet Strong detectors
+      whose 447 outputs are mapped to the four classes. AVPick results are means over five training seeds.
+      <sup>&dagger;</sup>Four-class references derived from AudioSet's fine-grained labels, the vocabulary the mapped
+      detectors were trained on. <sup>&Dagger;</sup>FireRedVAD does not predict sound, which contributes zero to its
+      macro F1.
+    </p>
+
+    <h3 class="subsection-title">Ablation of input routing and head separation</h3>
+    <div class="results-table-wrap">
+      <table class="results">
+        <thead>
+          <tr class="supheader">
+            <th rowspan="2">Config.</th>
+            <th colspan="5">F1 (&uarr;)</th>
+            <th rowspan="2">DER (&darr;, %)</th>
+          </tr>
+          <tr>
+            <th>Macro</th>
+            <th class="cls-speech">Speech</th>
+            <th class="cls-vocals">Vocals</th>
+            <th class="cls-instruments">Instr.</th>
+            <th class="cls-sound">Sound</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Vision-only</th><td>0.672<span class="std">&plusmn;0.0035</span></td><td>0.676<span class="std">&plusmn;0.0116</span></td><td>0.511<span class="std">&plusmn;0.0088</span></td><td>0.867<span class="std">&plusmn;0.0037</span></td><td>0.631<span class="std">&plusmn;0.0102</span></td><td>45.38<span class="std">&plusmn;1.89</span></td></tr>
+          <tr><th scope="row">Audio <i>h</i><sub>a</sub></th><td>0.884<span class="std">&plusmn;0.0012</span></td><td>0.912<span class="std">&plusmn;0.0008</span></td><td>0.855<span class="std">&plusmn;0.0027</span></td><td>0.980<span class="std">&plusmn;0.0016</span></td><td>0.789<span class="std">&plusmn;0.0063</span></td><td>17.61<span class="std">&plusmn;0.19</span></td></tr>
+          <tr><th scope="row">AV <i>h</i><sub>av</sub></th><td>0.884<span class="std">&plusmn;0.0009</span></td><td>0.912<span class="std">&plusmn;0.0020</span></td><td>0.852<span class="std">&plusmn;0.0043</span></td><td>0.973<span class="std">&plusmn;0.0020</span></td><td>0.799<span class="std">&plusmn;0.0058</span></td><td>17.45<span class="std">&plusmn;0.10</span></td></tr>
+          <tr><th scope="row">AV<sub>2</sub></th><td>0.902<span class="std">&plusmn;0.0002</span></td><td>0.921<span class="std">&plusmn;0.0001</span></td><td>0.885<span class="std">&plusmn;0.0003</span></td><td>0.983<span class="std">&plusmn;0.0001</span></td><td>0.820<span class="std">&plusmn;0.0004</span></td><td>14.94<span class="std">&plusmn;0.04</span></td></tr>
+          <tr class="ours-row"><th scope="row">AVPick (ours)</th><td><b>0.910</b><span class="std">&plusmn;0.0003</span></td><td><b>0.924</b><span class="std">&plusmn;0.0006</span></td><td><b>0.892</b><span class="std">&plusmn;0.0019</span></td><td><b>0.984</b><span class="std">&plusmn;0.0004</span></td><td><b>0.840</b><span class="std">&plusmn;0.0022</span></td><td><b>13.57</b><span class="std">&plusmn;0.11</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">
+      SV-Internal, mean &plusmn; standard deviation across seeds. Vision-only, Audio <i>h</i><sub>a</sub> and
+      AV <i>h</i><sub>av</sub> use a single head for all four classes. AV<sub>2</sub> has the same two-head
+      architecture and capacity as AVPick, but both heads read <i>h</i><sub>av</sub>.
+    </p>
+
+    <h3 class="subsection-title">Analysis</h3>
+    <div class="columns">
+      <div class="column is-half">
+        <figure class="figure-block">
+          <img src="static/images/visual_contribution.png" width="1182" height="763"
+               alt="Bar chart of visual contribution in F1 percentage points: speech +0.67 and +1.24, vocals +1.65 and +1.36, instruments +0.42 and +0.40, sound -2.06 and -2.12, for settings A and B.">
+        </figure>
+        <p class="figure-caption">
+          <b>Per-class visual contribution on SV-Internal.</b> Bars show the F1 difference (percentage points)
+          between audio-visual and audio-only input to the target class's head. The other head reads
+          <i>h</i><sub>av</sub> in setting A and <i>h</i><sub>a</sub> in setting B.
+        </p>
+      </div>
+      <div class="column is-half">
+        <figure class="figure-block">
+          <img src="static/images/offscreen_rates.png" width="1182" height="584"
+               alt="(a) Off-screen rate among clips containing each class: speech 18.6%, vocals 9.7%, instruments 5.7%, sound 44.7%. (b) Box plots of per-category off-screen rates.">
+        </figure>
+        <p class="figure-caption">
+          <b>Human-annotated off-screen rates on AudioSet-Strict.</b> (a) Off-screen rate among clips containing
+          each class. (b) Distribution of per-category off-screen rates.
+        </p>
+        <div class="results-table-wrap mt-4">
+          <table class="results">
+            <thead>
+              <tr><th>Model</th><th>On-screen</th><th>Off-screen</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">AV<sub>2</sub></th><td><b>94.0</b></td><td>42.8</td></tr>
+              <tr class="ours-row"><th scope="row">AVPick (ours)</th><td>89.1</td><td><b>55.9</b></td></tr>
+              <tr><th scope="row">&Delta; (AV<sub>2</sub> &minus; AVPick)</th><td>+4.9</td><td>&minus;13.1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          Frame-level <span class="cls cls-sound">sound</span> F1 (&uarr;, %) on AudioSet-Strict, grouped by
+          human-annotated source visibility. The two models differ only in the input to the sound head.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Dataset ================= -->
+<section class="section" id="dataset">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Dataset: AudioSet-FrameGold</h2>
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <div class="content has-text-justified">
+          <p>
+            AudioSet-FrameGold is a human-annotated benchmark for four-class, frame-level, multi-label evaluation,
+            released with the paper. Its clips come from the official AudioSet evaluation set with temporally-strong
+            labels. They are first filtered using AudioSet labels and ontology information only, then selected to be
+            acoustically complex while balancing coverage of the four classes; no model predictions are used at any
+            point of the selection. Every selected clip is then annotated from scratch at frame level under the
+            four-class taxonomy, and the original AudioSet labels are not carried over.
+          </p>
+        </div>
+
+        <div class="stat-tiles">
+          <div class="stat-tile"><div class="stat-value">1,345</div><div class="stat-label">clips</div></div>
+          <div class="stat-tile"><div class="stat-value">3.7 h</div><div class="stat-label">total duration</div></div>
+          <div class="stat-tile"><div class="stat-value">4</div><div class="stat-label">classes, multi-label</div></div>
+          <div class="stat-tile"><div class="stat-value">10 ms</div><div class="stat-label">evaluation frame grid</div></div>
+        </div>
+
+        <div class="content">
+          <ul>
+            <li><b>Candidate pool.</b> Starting from 16,385 evaluation clips, an ontology-reliability rule removes
+              2,242 clips and a denylist of 56 ambiguous labels removes 8,941 more, leaving 5,202 candidate clips.</li>
+            <li><b>Hearing first.</b> Labels follow audible events; the video may help identify a source, but visible
+              sources that cannot be heard are not labeled.</li>
+            <li><b>Multi-label.</b> Each class is annotated with its own onsets and offsets, so classes can overlap in
+              time. Same-class segments separated by at most 0.4&nbsp;s are merged, and a lone sound event shorter
+              than 0.4&nbsp;s is padded to 0.4&nbsp;s.</li>
+            <li><b>Quality control.</b> A separate reviewer re-annotates a random sample of every batch; batches
+              below 95% frame-level agreement are returned for re-annotation.</li>
+          </ul>
+        </div>
+
+        <h3 class="subsection-title">The three evaluation sets</h3>
+        <div class="results-table-wrap">
+          <table class="results">
+            <thead>
+              <tr><th></th><th>SV-Internal</th><th>AudioSet-Mapped</th><th>AudioSet-FrameGold</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Clips</th><td>155</td><td>16,385</td><td>1,345</td></tr>
+              <tr><th scope="row">Hours</th><td>2.0</td><td>45.0</td><td>3.7</td></tr>
+              <tr><th scope="row">Labels</th><td>human</td><td>human + mapped</td><td>human</td></tr>
+              <tr><th scope="row">Availability</th><td>proprietary</td><td>public (AudioSet)</td><td>released with the paper</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          &ldquo;Mapped&rdquo;: AudioSet's temporally-strong labels mapped to the four classes.
+          AudioSet-Mapped is the official AudioSet evaluation set and is not a new release.
+        </p>
+
+        <div class="has-text-centered mt-5">
+          <a href="" class="button is-normal is-rounded is-coming-soon" aria-disabled="true" tabindex="-1">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13"/><path d="M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/></svg></span>
+            <span>Download</span><span class="soon">Coming soon</span>
+          </a>
+          <p class="placeholder mt-3">&lt;Dataset download link — to be released&gt;</p>
+          <p class="placeholder">&lt;Dataset license — to be released&gt;</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================= Citation ================= -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content bibtex-block">
+    <h2 class="title is-3">Citation</h2>
+    <pre><code>&lt;BibTeX — to be released&gt;</code></pre>
+  </div>
+</section>
+
+<footer class="footer orchard-footer">
+  <div class="container">
+    <p>Website template adapted from Nerfies (CC BY-SA 4.0).</p>
+  </div>
+  <div class="orchard-band footer-band" aria-hidden="true">
+    <img src="static/images/orchard_footer.webp?v=7" alt="" width="2000" height="313">
+  </div>
+</footer>
+
+</body>
+</html>
